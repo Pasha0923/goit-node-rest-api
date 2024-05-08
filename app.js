@@ -9,7 +9,7 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
-
+// запити які починаються з /api/contacts треба шукати в contactsRouter тобто в файлі contactsRouter.js
 app.use("/api/contacts", contactsRouter);
 
 app.use((_, res) => {
