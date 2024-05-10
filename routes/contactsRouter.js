@@ -6,7 +6,7 @@ import {
   createContact,
   updateContact,
 } from "../controllers/contactsControllers.js";
-// В цьому файлі описуємо маршрути
+// описуємо маршрути
 const contactsRouter = express.Router();
 // запит на всі контакти
 contactsRouter.get("/", getAllContacts);
