@@ -68,16 +68,24 @@ export const updateContact = async (req, res, next) => {
       email: req.body.email,
       phone: req.body.phone,
     };
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Body must have at least one field" });
+    }
+
     const { error } = updateContactSchema.validate(contact, {
       abortEarly: false,
     });
     if (error) {
       return res.status(400).send({ message: error.message }); // помилка валідації (передані поля не відповідають схемі валідації)
     }
-    const { id } = req.params;
-    // const { name, email, phone } = req.body;
 
-    const result = await contactsService.updateContact(id, { ...contact });
+    const { id } = req.params;
+
+    const result = await contactsService.updateContact(id, {
+      ...contact,
+    });
     // console.log("result: ", result);
     if (result) {
       res.status(200).json(result);
