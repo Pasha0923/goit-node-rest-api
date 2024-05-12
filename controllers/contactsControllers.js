@@ -63,18 +63,13 @@ export const createContact = async (req, res, next) => {
 
 export const updateContact = async (req, res, next) => {
   try {
-    const contact = {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-    };
     if (!req.body || Object.keys(req.body).length === 0) {
       return res
         .status(400)
         .json({ message: "Body must have at least one field" });
     }
 
-    const { error } = updateContactSchema.validate(contact, {
+    const { error } = updateContactSchema.validate(req.body, {
       abortEarly: false,
     });
     if (error) {
@@ -83,9 +78,7 @@ export const updateContact = async (req, res, next) => {
 
     const { id } = req.params;
 
-    const result = await contactsService.updateContact(id, {
-      ...contact,
-    });
+    const result = await contactsService.updateContact(id, req.body);
     // console.log("result: ", result);
     if (result) {
       res.status(200).json(result);
