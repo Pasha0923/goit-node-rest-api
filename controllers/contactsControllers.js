@@ -14,9 +14,9 @@ export const getOneContact = async (req, res, next) => {
     const { id } = req.params;
     const contactById = await Contact.findById(id);
     if (contactById) {
-      res.status(200).json(contactById); // якщо результат є
+      res.status(200).json(contactById);
     } else {
-      throw HttpError(404, "Not found"); // якщо контакт за id не знайдено
+      throw HttpError(404, "Not found");
     }
   } catch (error) {
     next(error);
@@ -32,7 +32,7 @@ export const deleteContact = async (req, res, next) => {
     if (deleteContactId) {
       res.status(200).json(deleteContactId);
     } else {
-      throw HttpError(404, "Contact not found"); // якщо контакт за id не знайдено
+      throw HttpError(404, "Contact not found");
     }
   } catch (error) {
     next(error);
@@ -46,13 +46,6 @@ export const createContact = async (req, res, next) => {
       email: req.body.email,
       phone: req.body.phone,
     };
-    // const { error } = createContactSchema.validate(contact, {
-    //   abortEarly: false,
-    // });
-    //   // метод validate відповідає чи поля об'єкта відповідають схемі і повертає об'єкт рез-ту з полем error
-    // if (error) {
-    //     return res.status(400).json({ message: error.message }); }
-    // помилка валідації (передані поля не відповідають схемі валідації)
 
     const newContact = await Contact.create(contact);
     console.log("newContact: ", newContact);
@@ -82,12 +75,6 @@ export const updateContact = async (req, res, next) => {
 export const updateStatusContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!req.body || Object.keys(req.body).length === 0)
-      throw HttpError(
-        400,
-        "Body must have an object with key 'favorite' and its value boolean"
-      );
-
     const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
       new: true,
     });

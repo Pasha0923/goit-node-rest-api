@@ -15,7 +15,7 @@ const contactSchema = new mongoose.Schema(
     },
     favorite: {
       type: Boolean,
-      default: false, // якщо не передаємо поле favorite , то воно створються автоматично зі занченям false
+      default: false, // якщо не передаємо поле favorite , то воно створються автоматично зі значенням false
     },
   },
   {
@@ -23,5 +23,5 @@ const contactSchema = new mongoose.Schema(
     timestamps: true, // формат (дата створення/дата оновлення документа)
   }
 );
-// на основі схемки книжки можна створити модель. Викликаємо у mongoose метод model(). Ім'я моделі в однині
-export default mongoose.model("Contact", contactSchema); // contacts (назва колекції повинна бути в множині в нижному регістрі)
+
+export default mongoose.model("Contact", contactSchema);
