@@ -42,12 +42,12 @@ export const deleteContact = async (req, res, next) => {
 export const createContact = async (req, res, next) => {
   try {
     const { name, email, phone } = req.body;
-    const contact = {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-    };
-    const { error } = createContactSchema.validate(contact, {
+    // const contact = {
+    //   name: req.body.name,
+    //   email: req.body.email,
+    //   phone: req.body.phone,
+    // };
+    const { error } = createContactSchema.validate(req.body, {
       abortEarly: false,
     }); // метод validate відповідає чи поля об'єкта відповідають схемі і повертає об'єкт рез-ту з полем error
     if (error) {
@@ -63,12 +63,13 @@ export const createContact = async (req, res, next) => {
 
 export const updateContact = async (req, res, next) => {
   try {
+    // перевірка якщо не передано жодного поля
     if (!req.body || Object.keys(req.body).length === 0) {
       return res
         .status(400)
         .json({ message: "Body must have at least one field" });
     }
-
+    // помилка валідації (joi)
     const { error } = updateContactSchema.validate(req.body, {
       abortEarly: false,
     });
