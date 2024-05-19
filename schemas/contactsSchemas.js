@@ -13,6 +13,7 @@ export const updateContactSchema = Joi.object({
   name: Joi.string().min(4),
   email: Joi.string().email(),
   phone: Joi.string().min(8),
+  favorite: Joi.boolean(),
 });
 export const updateFavoriteSchema = Joi.object({
   // patch

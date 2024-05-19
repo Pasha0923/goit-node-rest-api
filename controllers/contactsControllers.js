@@ -3,7 +3,7 @@ import HttpError from "../helpers/HttpError.js";
 export const getAllContacts = async (req, res) => {
   try {
     const result = await Contact.find();
-    res.status(201).json(result);
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   }
