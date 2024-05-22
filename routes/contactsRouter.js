@@ -29,7 +29,7 @@ contactsRouter.delete("/:id", isValidid, deleteContact);
 contactsRouter.post(
   "/",
   jsonParser,
-  validateBody(createContactSchema),
+  validateBody(createContactSchema), // перевіряємо тіло запиту за допомогою joi схеми
   createContact
 );
 
