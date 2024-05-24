@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   getAllContacts,
   getOneContact,
@@ -14,27 +15,29 @@ import {
   updateContactSchema,
   updateFavoriteSchema,
 } from "../schemas/contactsSchemas.js";
+import authenticate from "../helpers/authenticate.js";
 
-// описуємо маршрути
 const contactsRouter = express.Router();
 
 const jsonParser = express.json();
 // запит на всі контакти
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", authenticate, getAllContacts);
 
-contactsRouter.get("/:id", isValidid, getOneContact);
+contactsRouter.get("/:id", authenticate, isValidid, getOneContact);
 
-contactsRouter.delete("/:id", isValidid, deleteContact);
+contactsRouter.delete("/:id", authenticate, isValidid, deleteContact);
 
 contactsRouter.post(
   "/",
+  authenticate,
   jsonParser,
-  validateBody(createContactSchema), // перевіряємо тіло запиту за допомогою joi схеми
+  validateBody(createContactSchema),
   createContact
 );
 
 contactsRouter.put(
   "/:id",
+  authenticate,
   isValidid,
   jsonParser,
   validateBody(updateContactSchema),
@@ -43,9 +46,11 @@ contactsRouter.put(
 
 contactsRouter.patch(
   "/:id/favorite",
+  authenticate,
   isValidid,
   jsonParser,
   validateBody(updateFavoriteSchema),
   updateStatusContact
 );
+
 export default contactsRouter;

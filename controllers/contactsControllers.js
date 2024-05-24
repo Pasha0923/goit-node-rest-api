@@ -1,8 +1,16 @@
 import Contact from "../models/contact.js";
 import HttpError from "../helpers/HttpError.js";
-export const getAllContacts = async (req, res) => {
+export const getAllContacts = async (req, res, next) => {
   try {
-    const result = await Contact.find();
+    const { _id: owner } = req.user;
+
+    // ПАГІНАЦІЯ
+    const { page = 1, limit = 10 } = req.query;
+    const { favorite } = req.query;
+    const skip = (page - 1) * limit;
+    const result = await Contact.find({ owner, favorite: favorite === "true" })
+      .skip(skip)
+      .limit(limit);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -40,14 +48,16 @@ export const deleteContact = async (req, res, next) => {
 };
 
 export const createContact = async (req, res, next) => {
+  console.log(req.user);
   try {
     const contact = {
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
+      favorite: req.body.favorite,
     };
-
-    const newContact = await Contact.create(contact);
+    const { _id: owner } = req.user; // візьмемо з req.user id людини яка робить запит
+    const newContact = await Contact.create({ ...contact, owner }); // за кожним користувачем буде своя книга(до кожної людини додається поле owner)
     console.log("newContact: ", newContact);
     res.status(201).json(newContact);
   } catch (error) {

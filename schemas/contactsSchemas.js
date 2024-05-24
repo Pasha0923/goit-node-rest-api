@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { subscriptionList } from "../models/user.js";
 
 export const createContactSchema = Joi.object({
   // post
@@ -21,4 +22,12 @@ export const updateFavoriteSchema = Joi.object({
   email: Joi.string().email(),
   phone: Joi.string().min(8),
   favorite: Joi.boolean().required(),
+});
+export const updateSubscriptionSchema = Joi.object({
+  // patch(user)
+  password: Joi.string().min(8),
+  email: Joi.string().email(),
+  subscription: Joi.string()
+    .valid(...subscriptionList)
+    .required(),
 });

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import handleMongooseError from "../helpers/handleMongooseError.js";
 export const subscriptionList = ["starter", "pro", "business"];
 
 // створюємо модель користувача user яку будемо зберігати в базі даних!
@@ -17,7 +18,7 @@ const userSchema = new mongoose.Schema(
       // підписка
       type: String,
       enum: subscriptionList,
-      default: "starter", // якщо не передано поле subscription , то воно створються автоматично зі значенням starter
+      default: "starter",
     },
     token: {
       type: String,
@@ -25,9 +26,9 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    versionKey: false, // відключаємо версію документа
-    timestamps: true, // формат (дата створення/дата оновлення документа)
+    versionKey: false,
+    timestamps: true,
   }
 );
-
+userSchema.post("save", handleMongooseError);
 export default mongoose.model("User", userSchema);
