@@ -20,9 +20,12 @@ export const getAllContacts = async (req, res, next) => {
 export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const contactById = await Contact.findById(id);
-    if (contactById) {
-      res.status(200).json(contactById);
+    const getContactByIdOwner = await Contact.findOne({
+      _id: id,
+      owner: req.user.id,
+    });
+    if (getContactByIdOwner) {
+      res.status(200).json(getContactByIdOwner);
     } else {
       throw HttpError(404, "Not found");
     }
@@ -35,10 +38,13 @@ export const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const deleteContactId = await Contact.findByIdAndDelete(id);
-    console.log("deleteContactId: ", deleteContactId);
-    if (deleteContactId) {
-      res.status(200).json(deleteContactId);
+    const deleteContactIdOwner = await Contact.findOneAndDelete({
+      _id: id,
+      owner: req.user.id,
+    });
+    console.log("deleteContactIdOwner: ", deleteContactIdOwner);
+    if (deleteContactIdOwner) {
+      res.status(200).json(deleteContactIdOwner);
     } else {
       throw HttpError(404, "Contact not found");
     }
@@ -71,7 +77,11 @@ export const updateContact = async (req, res, next) => {
     if (!req.body || Object.keys(req.body).length === 0) {
       throw HttpError(400, "Body must have at least one field");
     }
-    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+    const result = await Contact.findOneAndUpdate(
+      { _id: id, owner: req.user.id },
+      req.body,
+      { new: true }
+    );
     console.log("result: ", result);
     if (result) {
       res.status(200).json(result);
@@ -85,9 +95,13 @@ export const updateContact = async (req, res, next) => {
 export const updateStatusContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const updatedContact = await Contact.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const updatedContact = await Contact.findOneAndUpdate(
+      { _id: id, owner: req.user.id },
+      req.body,
+      {
+        new: true,
+      }
+    );
     console.log(" updatedContact: ", updatedContact);
     if (!updatedContact) {
       throw HttpError(404, "Contact not found");

@@ -11,27 +11,27 @@ const authRouter = express.Router();
 const jsonParser = express.json();
 // sign up
 authRouter.post(
-  "/users/register",
+  "/register",
   jsonParser,
   validateBody(registerSchema),
   AuthController.register
 );
 // sign in;
 authRouter.post(
-  "/users/login",
+  "/login",
   jsonParser,
   validateBody(loginSchema),
   AuthController.login
 );
 // current
-authRouter.get("/users/current", authenticate, AuthController.getCurrent);
+authRouter.get("/current", authenticate, AuthController.getCurrent);
 
 // logout
-authRouter.post("/users/logout", authenticate, AuthController.logout);
+authRouter.post("/logout", authenticate, AuthController.logout);
 
 // patch
 authRouter.patch(
-  "/users",
+  "/",
   authenticate,
   jsonParser,
   validateBody(updateSubscriptionSchema), // перевіряємо тіло запиту за допомогою joi схеми
