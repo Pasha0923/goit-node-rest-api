@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema(
       enum: subscriptionList,
       default: "starter",
     },
+    // коли користувач зробить logout то token стане не валідним
     token: {
       type: String,
       default: null,

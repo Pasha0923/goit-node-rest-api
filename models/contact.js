@@ -17,16 +17,16 @@ const contactSchema = new mongoose.Schema(
     },
     favorite: {
       type: Boolean,
-      default: false, 
+      default: false,
     },
     owner: {
-      type: Schema.Types.ObjectId, //  Id людини яка додала книгу , генерує mongoDB
+      type: Schema.Types.ObjectId, //  Id людини яка додала книгу , генерує mongoDB ( _id: ObjectId )
       ref: "user", // назва колекції з якої буде це Id
     },
   },
   {
-    versionKey: false, 
-    timestamps: true, 
+    versionKey: false,
+    timestamps: true,
   }
 );
 contactSchema.post("save", handleMongooseError);

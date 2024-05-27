@@ -78,14 +78,16 @@ async function logout(req, res, next) {
 async function updateSubscription(req, res, next) {
   if (
     Object.keys(req.body).length !== 1 ||
-    Object.keys(req.body)[0] !== "subscription"
+    !Object.keys(req.body).includes("subscription")
   ) {
     return res.status(400).json({
       message: "Body must have one field: subscription",
     });
   }
   try {
-    const data = await User.findByIdAndUpdate(req.user._id, req.body);
+    const data = await User.findByIdAndUpdate(req.user.id, req.body, {
+      new: true,
+    });
     if (!data) {
       return res.status(404).json({
         message: "Not found",

@@ -18,6 +18,7 @@ const authenticate = async (req, res, next) => {
       next(HttpError(401, "Not Unauthorized"));
     }
     req.user = user; // записує людину в об'єкт req.user (записує інформація про людину яка зробила запит)
+    // простими словами за допомогою нами створеного поля user ( req.user) будеио мати інфу про користувача
     next();
   } catch (error) {
     next(HttpError(401, "Not Unauthorized"));
