@@ -1,8 +1,12 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
-const { SECRET_KEY } = process.env;
 import HttpError from "../helpers/HttpError.js";
+import gravatar from "gravatar";
+import path from "node:path";
+import * as fs from "node:fs/promises";
+const { SECRET_KEY } = process.env;
+// const avatarsDir = path.resolve("public", "avatars"); // новий абсолютний шлях до папки avatars в якій знаходиться файл
 async function register(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -13,9 +17,14 @@ async function register(req, res, next) {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({ ...req.body, password: hashPassword });
-
+    // для генерації тимчасової аватарки у користувача використовуємо пакет gravavatar а потім треба дати йому окремий роут для того щоб цю аватарку змінити
+    const avatarURL = gravatar.url(email); // щоб згенерувати посилання на тимчасову ватарку треба викликати метод url і передати email людини яка хоче зареєструватися і нам повертається посилання на тимчасову аватарку
+    const newUser = await User.create({
+      ...req.body,
+      password: hashPassword,
+      avatarURL, // ми її зберігаємо в базі і коли людина реєструється їй буде надаватися тимчасова аватарка
+    });
+    // Треба дати можливість людині змінити аватарку (тобто відправити на певну адресу нову аватарку і ми її замінимо)
     res.status(201).json({
       email: newUser.email,
       subscription: newUser.subscription,
@@ -100,4 +109,29 @@ async function updateSubscription(req, res, next) {
   }
 }
 
-export default { register, login, getCurrent, logout, updateSubscription };
+async function updateAvatar(req, res, next) {
+  try {
+    const { _id: id } = req.user;
+    const { path: tmpUpload, originalname } = req.file;
+    const fileName = `${id}-${originalname}`;
+    const resultUpload = path.resolve("public/avatars", fileName);
+    await fs.rename(tmpUpload, resultUpload);
+    const avatarURL = path.join("avatars", fileName);
+    console.log(avatarURL);
+    const user = await User.findByIdAndUpdate(id, { avatarURL }, { new: true });
+    if (!user) {
+      throw HttpError(401, "Not authorized");
+    }
+    res.status(200).json({ avatarURL });
+  } catch (error) {
+    next(error);
+  }
+}
+export default {
+  register,
+  login,
+  getCurrent,
+  logout,
+  updateSubscription,
+  updateAvatar,
+};

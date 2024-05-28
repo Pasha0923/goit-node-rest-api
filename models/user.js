@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import handleMongooseError from "../helpers/handleMongooseError.js";
+
 export const subscriptionList = ["starter", "pro", "business"];
 
 // створюємо модель користувача user яку будемо зберігати в базі даних!
@@ -23,6 +24,12 @@ const userSchema = new mongoose.Schema(
     // коли користувач зробить logout то token стане не валідним
     token: {
       type: String,
+      default: null,
+    },
+    avatarURL: {
+      // посилання на аватарку користувача яку він завантажить (видаємо avatarURL під час реєстрації)
+      type: String,
+      required: true,
       default: null,
     },
   },
