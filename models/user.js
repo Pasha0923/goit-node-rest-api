@@ -3,7 +3,6 @@ import handleMongooseError from "../helpers/handleMongooseError.js";
 
 export const subscriptionList = ["starter", "pro", "business"];
 
-// створюємо модель користувача user яку будемо зберігати в базі даних!
 const userSchema = new mongoose.Schema(
   {
     password: {
@@ -30,7 +29,6 @@ const userSchema = new mongoose.Schema(
       // посилання на аватарку користувача яку він завантажить (видаємо avatarURL під час реєстрації)
       type: String,
       required: true,
-      default: null,
     },
   },
   {

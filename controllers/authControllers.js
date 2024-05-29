@@ -5,8 +5,9 @@ import HttpError from "../helpers/HttpError.js";
 import gravatar from "gravatar";
 import path from "node:path";
 import * as fs from "node:fs/promises";
+import jimpAvatar from "../helpers/jimpAvatar.js";
 const { SECRET_KEY } = process.env;
-// const avatarsDir = path.resolve("public", "avatars"); // новий абсолютний шлях до папки avatars в якій знаходиться файл
+
 async function register(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -17,14 +18,14 @@ async function register(req, res, next) {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    // для генерації тимчасової аватарки у користувача використовуємо пакет gravavatar а потім треба дати йому окремий роут для того щоб цю аватарку змінити
-    const avatarURL = gravatar.url(email); // щоб згенерувати посилання на тимчасову ватарку треба викликати метод url і передати email людини яка хоче зареєструватися і нам повертається посилання на тимчасову аватарку
+
+    const avatarURL = gravatar.url(email);
     const newUser = await User.create({
       ...req.body,
       password: hashPassword,
-      avatarURL, // ми її зберігаємо в базі і коли людина реєструється їй буде надаватися тимчасова аватарка
+      avatarURL,
     });
-    // Треба дати можливість людині змінити аватарку (тобто відправити на певну адресу нову аватарку і ми її замінимо)
+
     res.status(201).json({
       email: newUser.email,
       subscription: newUser.subscription,
@@ -111,9 +112,11 @@ async function updateSubscription(req, res, next) {
 
 async function updateAvatar(req, res, next) {
   try {
+    console.log(req.file);
     const { _id: id } = req.user;
     const { path: tmpUpload, originalname } = req.file;
-    const fileName = `${id}-${originalname}`;
+    await jimpAvatar(tmpUpload);
+    const fileName = `${id}-${originalname}`; // отримали унікальне ім'я файлу
     const resultUpload = path.resolve("public/avatars", fileName);
     await fs.rename(tmpUpload, resultUpload);
     const avatarURL = path.join("avatars", fileName);
@@ -127,6 +130,7 @@ async function updateAvatar(req, res, next) {
     next(error);
   }
 }
+
 export default {
   register,
   login,

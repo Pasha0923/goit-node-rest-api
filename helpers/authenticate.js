@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import HttpError from "./HttpError.js";
-const { SECRET_KEY } = process.env; // забираємо секретний ключ зі змінних оточення
+const { SECRET_KEY } = process.env;
 
 const authenticate = async (req, res, next) => {
   const { authorization = "" } = req.headers;

@@ -97,8 +97,8 @@ export const updateContact = async (req, res, next) => {
 // метод PATCH http://localhost:4000/api/contacts/6650aa2a4ecbf2e7f022a8b3/favorite
 export const updateStatusContact = async (req, res, next) => {
   try {
-    const { id } = req.params; // ми тут явно указываем что хотим передать и поменять именно поле favorite
-    const { favorite } = req.body;
+    const { id } = req.params;
+    const { favorite } = req.body; // ми тут явно указываем что хотим передать и поменять именно поле favorite
     const updatedContact = await Contact.findOneAndUpdate(
       { _id: id, owner: req.user.id },
       { favorite },
