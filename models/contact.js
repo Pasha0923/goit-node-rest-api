@@ -20,8 +20,8 @@ const contactSchema = new mongoose.Schema(
       default: false,
     },
     owner: {
-      type: Schema.Types.ObjectId, //  Id людини яка додала книгу , генерує mongoDB ( _id: ObjectId )
-      ref: "user", // назва колекції з якої буде це Id
+      type: Schema.Types.ObjectId, 
+      ref: "user", 
     },
   },
   {

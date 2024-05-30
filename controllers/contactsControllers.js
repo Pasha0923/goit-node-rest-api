@@ -98,7 +98,7 @@ export const updateContact = async (req, res, next) => {
 export const updateStatusContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { favorite } = req.body; // ми тут явно указываем что хотим передать и поменять именно поле favorite
+    const { favorite } = req.body;
     const updatedContact = await Contact.findOneAndUpdate(
       { _id: id, owner: req.user.id },
       { favorite },

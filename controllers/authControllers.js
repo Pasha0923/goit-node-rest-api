@@ -116,7 +116,7 @@ async function updateAvatar(req, res, next) {
     const { _id: id } = req.user;
     const { path: tmpUpload, originalname } = req.file;
     await jimpAvatar(tmpUpload);
-    const fileName = `${id}-${originalname}`; // отримали унікальне ім'я файлу
+    const fileName = `${id}-${originalname}`; 
     const resultUpload = path.resolve("public/avatars", fileName);
     await fs.rename(tmpUpload, resultUpload);
     const avatarURL = path.join("avatars", fileName);
