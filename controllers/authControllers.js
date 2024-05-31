@@ -112,11 +112,14 @@ async function updateSubscription(req, res, next) {
 
 async function updateAvatar(req, res, next) {
   try {
+    if (!req.file) {
+      return next(HttpError(400, "File not found"));
+    }
     console.log(req.file);
     const { _id: id } = req.user;
     const { path: tmpUpload, originalname } = req.file;
     await jimpAvatar(tmpUpload);
-    const fileName = `${id}-${originalname}`; 
+    const fileName = `${id}-${originalname}`;
     const resultUpload = path.resolve("public/avatars", fileName);
     await fs.rename(tmpUpload, resultUpload);
     const avatarURL = path.join("avatars", fileName);
@@ -130,7 +133,7 @@ async function updateAvatar(req, res, next) {
     next(error);
   }
 }
-
+// http://localhost:4000/avatars/6654dcec34a299eb142ffb02-5dd45aac-3d8c-4162-b166-c23f87c1d5d0.jpg
 export default {
   register,
   login,

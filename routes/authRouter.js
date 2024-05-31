@@ -6,7 +6,7 @@ import validateBody from "../helpers/validateBody.js";
 import { loginSchema, registerSchema } from "../schemas/usersSchemas.js";
 import authenticate from "../helpers/authenticate.js";
 import { updateSubscriptionSchema } from "../schemas/contactsSchemas.js";
-import upload from "../helpers/upload.js"; 
+import upload from "../helpers/upload.js";
 
 const authRouter = express.Router();
 const jsonParser = express.json();
@@ -47,6 +47,5 @@ authRouter.patch(
   upload.single("avatar"),
   AuthController.updateAvatar
 );
-
 
 export default authRouter;

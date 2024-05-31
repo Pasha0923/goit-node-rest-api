@@ -1,7 +1,7 @@
 import multer from "multer";
 import path from "node:path";
 
-const tmpDir = path.resolve("tmp");
+const tmpDir = path.resolve("tmp"); // абсолютний шлях до тимчасової папки
 
 const multerConfig = multer.diskStorage({
   destination: tmpDir,

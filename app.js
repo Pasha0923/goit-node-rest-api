@@ -11,7 +11,7 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 
-app.use("/avatars", express.static(path.resolve("public/avatars")));
+app.use("/avatars", express.static(path.resolve("public/avatars"))); // для віддачі статичних файлів
 
 app.use("/api/contacts", contactsRouter);
 app.use("/api/users", authRouter);
