@@ -3,7 +3,11 @@ import express from "express";
 import AuthController from "../controllers/authControllers.js";
 
 import validateBody from "../helpers/validateBody.js";
-import { loginSchema, registerSchema } from "../schemas/usersSchemas.js";
+import {
+  emailSchema,
+  loginSchema,
+  registerSchema,
+} from "../schemas/usersSchemas.js";
 import authenticate from "../helpers/authenticate.js";
 import { updateSubscriptionSchema } from "../schemas/contactsSchemas.js";
 import upload from "../helpers/upload.js";
@@ -18,6 +22,16 @@ authRouter.post(
   validateBody(registerSchema),
   AuthController.register
 );
+// http://localhost:4000/api/users/verify/1MuVU8Jg4fOwQel0MvvNs
+authRouter.get("/verify/:verificationToken", AuthController.verifyEmail);
+
+// http://localhost:4000/api/users/verify
+authRouter.post(
+  "/verify",
+  jsonParser,
+  validateBody(emailSchema),
+  AuthController.resendVerifyEmail
+);
 // sign in;
 authRouter.post(
   "/login",
@@ -25,6 +39,7 @@ authRouter.post(
   validateBody(loginSchema),
   AuthController.login
 );
+
 // current
 authRouter.get("/current", authenticate, AuthController.getCurrent);
 
@@ -39,8 +54,7 @@ authRouter.patch(
   validateBody(updateSubscriptionSchema),
   AuthController.updateSubscription
 );
-// запит на зміну автарки могла зробити тільки та людина яка залогінилась
-// створюємо маршрут за яким людина може змінити аватарку метод patch
+
 authRouter.patch(
   "/avatars",
   authenticate,
